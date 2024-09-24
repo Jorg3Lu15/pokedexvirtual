@@ -1,1 +1,1 @@
-Ejercicio para practicar ramas
+Ejercicio para practicar el comando  git diff
