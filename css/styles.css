@@ -116,14 +116,29 @@ header .links {
 }
 
 .links a {
-    text-decoration: none;
+    position: relative;
     color: var(--white);
     font-weight: 700;
-    margin: 1rem;
-    padding: 16px;
+    margin-right: .3rem;
+    text-decoration: none;
 }
-.links a:hover {
-    background-color: var(--green);
+.links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--white);
+    bottom: -5px;
+    border-radius: 5px;
+    transform: translateY(10px);
+    opacity: 0;
+    transition: .5s ease;
+}
+
+.links a:hover:after {
+    transform: translateY(0);
+    opacity: 1;
 }
 
 /* Search bar*/
@@ -146,7 +161,7 @@ header .links {
 }
 
 .dropbtn:hover {
-    background-color: var(--green);
+    
 }
 
 /* Estilos del contenido del dropdown */
