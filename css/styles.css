@@ -119,6 +119,7 @@ header .links {
     position: relative;
     color: var(--white);
     font-weight: 700;
+    font-size: 18px;
     margin-right: .3rem;
     text-decoration: none;
 }
@@ -156,7 +157,7 @@ header .links {
 .dropbtn {
     color: var(--white);
     padding: 16px;
-    font-size: 16px;
+    font-size: 18px;
     text-decoration: none;
 }
 
