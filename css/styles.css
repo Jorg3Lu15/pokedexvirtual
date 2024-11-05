@@ -4,6 +4,8 @@
     --black: #212121;
     --green: #3e8e41;
     --header-footer: #D14900;
+    --degree-header-footer: #c24a0ab6;
+    --degree-header-footer-2: #b945078f;
 
 
 }
@@ -51,6 +53,7 @@ body {
 
 header {
     background-color: var(--header-footer);
+    background: linear-gradient(600deg, var(--degree-header-footer), var(--header-footer), var(--degree-header-footer-2));
     margin: .5rem;
     padding: 2rem;
 }
@@ -232,8 +235,10 @@ header .links {
     margin: 2rem 4rem;
     border-radius: .5rem;
     display: flex;
-    text-align: justify;
 
+}
+.info {
+    text-align: justify;
 }
 
 /*Home Earth Animation*/
@@ -247,6 +252,7 @@ header .links {
 
 footer {
     background-color: var(--header-footer);
+    background: linear-gradient(600deg, var(--degree-header-footer), var(--header-footer), var(--degree-header-footer-2));
     padding: 1rem;
     display: flex;
 }
