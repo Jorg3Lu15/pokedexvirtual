@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon World</title>
+    <link rel="icon" href="../static/img/earth.png" type="image/png">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<style>
+    /* Estilos básicos */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa;
+    }
+
+    header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 20px;
+        background-color: #ff7518;
+        color: #fff;
+    }
+
+    header .logo-container img {
+        max-height: 50px;
+    }
+
+    .links {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .links a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    /* Barra de búsqueda y filtros */
+    .search-container {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin: 20px auto;
+        max-width: 800px;
+    }
+
+    .search-container input,
+    .search-container select,
+    .search-container button {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .search-container button {
+        background-color: #ff7518;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    /* Tarjetas de Pokémon */
+    .pokedex {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        margin: 20px;
+    }
+
+    .card {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 200px;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .card img {
+        width: 100px;
+        height: 100px;
+        margin: 10px auto;
+    }
+
+    .card h4 {
+        margin: 5px 0;
+    }
+
+    .types {
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .type {
+        padding: 5px 10px;
+        border-radius: 5px;
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .type.planta {
+        background-color: #78c850;
+    }
+
+    .type.veneno {
+        background-color: #a040a0;
+    }
+
+    footer {
+        text-align: center;
+        padding: 20px;
+        background-color: #333;
+        color: #fff;
+    }
+</style>
+<div class="bg-image"></div>
+<div class="overlay"></div>
+<body>
+    <!-- Header start -->
+    <header>
+        <div class="logo-container">
+            <img src="/static/img/logo.png" alt="Logo de la página">
+        </div>
+        <div class="links">
+            <a href="../index.html">Inicio</a>
+            <a href="#">Pokédex</a>
+            <a href="#">Información</a>
+        </div>
+    </header>
+    <!-- Header end -->
+
+    <!-- Barra de búsqueda y filtros -->
+    <div class="search-container">
+        <input type="text" placeholder="Ingresa un nombre o número">
+        <select>
+            <option value="kanto">Kanto</option>
+            <option value="johto">Johto</option>
+            <!-- Agregar más regiones si es necesario -->
+        </select>
+        <select>
+            <option value="asc">Número inferior</option>
+            <option value="desc">Número superior</option>
+        </select>
+        <button>Buscar</button>
+    </div>
+
+    <!-- Pokédex -->
+    <div class="pokedex">
+        <div class="card">
+            <h4>No. 0001</h4>
+            <img src="/img/pokedex/001.png" alt="Bulbasaur">
+            <h4>Bulbasaur</h4>
+            <div class="types">
+                <div class="type planta">Planta</div>
+                <div class="type veneno">Veneno</div>
+            </div>
+        </div>
+        <div class="card">
+            <h4>No. 0002</h4>
+            <img src="/img/pokedex/002.png" alt="Ivysaur">
+            <h4>Ivysaur</h4>
+            <div class="types">
+                <div class="type planta">Planta</div>
+                <div class="type veneno">Veneno</div>
+            </div>
+        </div>
+        <div class="card">
+            <h4>No. 0003</h4>
+            <img src="/img/pokedex/003_f2.png" alt="Venusaur">
+            <h4>Venusaur</h4>
+            <div class="types">
+                <div class="type planta">Planta</div>
+                <div class="type veneno">Veneno</div>
+            </div>
+        </div>
+        <div class="card">
+            <h4>No. 0004</h4>
+            <img src="/img/pokedex/004.png" alt="Charmander">
+            <h4>Charmander</h4>
+            <div class="types">
+                <div class="type planta">Planta</div>
+                <div class="type veneno">Veneno</div>
+            </div>
+        </div>
+        <div class="card">
+            <h4>No. 0005</h4>
+            <img src="/img/pokedex/005.png" alt="Charmeleon">
+            <h4>Charmeleon</h4>
+            <div class="types">
+                <div class="type planta">Planta</div>
+                <div class="type veneno">Veneno</div>
+            </div>
+        </div>
+        <div class="card">
+            <h4>No. 0006</h4>
+            <img src="/img/pokedex/006.png" alt="Charizard">
+            <h4>Charizard</h4>
+            <div class="types">
+                <div class="type planta">Planta</div>
+                <div class="type veneno">Veneno</div>
+            </div>
+        </div>
+        <div class="card">
+            <h4>No. 0007</h4>
+            <img src="/img/pokedex/007.png" alt="Squirtle">
+            <h4>Squirtle</h4>
+            <div class="types">
+                <div class="type planta">Planta</div>
+                <div class="type veneno">Veneno</div>
+            </div>
+        </div>
+        <div class="card">
+            <h4>No. 0008</h4>
+            <img src="/img/pokedex/008.png" alt="Wartortle">
+            <h4>Wartortle</h4>
+            <div class="types">
+                <div class="type planta">Planta</div>
+                <div class="type veneno">Veneno</div>
+            </div>
+        </div>
+        <div class="card">
+            <h4>No. 0009</h4>
+            <img src="/img/pokedex/009.png" alt="Blastoise">
+            <h4>Blastoise</h4>
+            <div class="types">
+                <div class="type planta">Planta</div>
+                <div class="type veneno">Veneno</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="social-media"><i class='bx bxl-instagram-alt'></i></div>
+        <div class="social-media"><i class='bx bxl-facebook-circle'></i></div>
+        <div class="social-media"><i class='bx bxl-youtube'></i></div>
+        <div class="social-media"><i class='bx bxl-pinterest' ></i></div>
+    </footer>
+</body>
+</html>
