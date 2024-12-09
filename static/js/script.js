@@ -34,3 +34,7 @@ let angle = 0;
     window.onload = function() {
         rotateEarth();
     }
+
+    
+
+   
