@@ -25,7 +25,7 @@ body {
     overflow: hidden;
 }
 
-/* Background image*/
+/* Imagen de fondo*/
 .bg-image {
     position: absolute;
     top: 0;
@@ -39,6 +39,7 @@ body {
     z-index: -2;
 }
 
+/* Fondo oscuro para cubrir la imagen de fondo */
 .overlay {
     position: absolute;
     top: 0;
@@ -49,26 +50,31 @@ body {
     z-index: -1;
 }
 
-/*Elements and styles from the Header*/
-
+/* Encabezado y los elementos de este */
 header {
     background-color: var(--header-footer);
     background: linear-gradient(600deg, var(--degree-header-footer), var(--header-footer), var(--degree-header-footer-2));
     margin: .5rem;
     padding: 2rem;
 }
+/* Enlaces de navegación del encabezado */
 header .links {
     display: flex;
     justify-content: space-evenly;
 
 }
-/* Logo */
+
+.title h1{
+    text-align: center;
+    color: var(--white);
+}
+/* Logo de la página del encabezado */
 .logo-container img{
     max-width: 190px; /* Logo max size */
     height: auto; /* Ajuste automático de altura según el ancho */
 }
 
-/* Header's search bar*/
+/* Barra de búsqueda del encabezado */
 .search-bar {
     width: 250px;
     height: 45px;
@@ -88,7 +94,7 @@ header .links {
     padding-left: 10px;
 }
 
-/* Search Bar Style*/
+/* Estilos  de barra de búsqueda del Encabezado*/
 .search-bar button {
     width: 40px;
     height: 100%;
@@ -103,7 +109,38 @@ header .links {
 
 }
 
+/* Barra de búsqueda y filtros */
+.search-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 20px auto;
+    max-width: 800px;
+}
 
+.search-container input,
+.search-container select,
+.search-container button {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.search-container button {
+    background-color: #ff7518;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+/* Tarjetas de Pokémon */
+.pokedex {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px;
+}
 
 /* Navigation Container */
 .main-nav {
@@ -164,6 +201,46 @@ header .links {
     text-decoration: none;
 }
 
+.card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 200px;
+    text-align: center;
+    padding: 10px;
+}
+
+.card img {
+    width: 100px;
+    height: 100px;
+    margin: 10px auto;
+}
+
+.card h4 {
+    margin: 5px 0;
+}
+
+.types {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.type {
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.type.planta {
+    background-color: #78c850;
+}
+
+.type.veneno {
+    background-color: #a040a0;
+}
 
 /* Estilos del contenido del dropdown */
 .dropdown-content {
@@ -262,3 +339,127 @@ footer {
 .social-media i {
     font-size: 26px;
 }
+
+.pokemon-card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  #pokemon-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+
+
+  .pokemon-card img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto 10px;
+  }
+  
+  .delete-button {
+
+    padding: .5rem;
+    border: none;
+    border-radius: .4rem;
+    background-color: #007bff;
+    color: #ffffff;
+    font-weight: bold;
+  }
+
+  .delete-button:hover {
+    cursor: pointer;
+    background-color: #116dcf;
+  }
+
+/* Contenedor del formulario */
+.form-container {
+    background-color: #fff;
+    padding: 100px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 800px;
+    width: 90%;
+    margin: 50px auto;
+    text-align: center;
+}
+
+/* Título del formulario */
+.form-container h1 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 20px;
+    
+}
+
+form {
+    display: grid;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-content:space-around;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    color: #333;
+}
+
+
+/* Estilo del formulario */
+
+
+form input,
+form textarea,
+form button {
+    display: grid;
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Estilo del botón */
+form button {
+    background-color: #f97300; /* Naranja Pokémon */
+    color: white;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #d96400;
+}
+
+/* Estilo para el enlace "Volver a la lista" como botón */
+a.back {
+    display: inline-block; /* Asegura que se comporte como un botón */
+    padding: 10px 20px; /* Espaciado interno */
+    font-size: 14px; /* Tamaño del texto */
+    font-weight: bold; /* Resaltar el texto */
+    color: #ffffff; /* Color del texto */
+    background-color: #007BFF; /* Color de fondo */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    text-align: center; /* Centrar texto */
+    text-decoration: none; /* Quitar el subrayado */
+    cursor: pointer; /* Mostrar el cursor de "clic" */
+    transition: background-color 0.3s ease; /* Animación para el cambio de color */
+  }
+  
+  /* Efecto hover para el enlace */
+  a.back:hover {
+    background-color: #0056b3; /* Color más oscuro al pasar el ratón */
+  }
