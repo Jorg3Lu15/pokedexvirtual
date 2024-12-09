@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Añadir Pokémon</title>
+  <link rel="icon" href="../static/img/earth.png" type="image/png">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="../static/css/styles.css">
+</head>
+  <div class="bg-image"></div>
+  <div class="overlay"></div>
+<body>
+<!-- Header start -->
+<header>
+  <!-- Logo-container start -->
+  <div class="logo-container">
+      <img src="../static/img/logo.png" alt="Logo de la pagina">
+  </div>
+  <!-- Logo-container end -->
+
+  <!-- Links container start -->
+  <div class="links">
+      <a href="#">Inicio</a>
+      <a href="/templates/pokedex.html">Pokédex</a>
+      <!-- Dropdown container start -->
+      <div class="dropdown">
+          <a href="#" class="dropbtn" id="info-btn">Información</a>
+          <div class="dropdown-content">
+              <div class="column">
+                  <h5>Juegos</h5>
+                  <a href="templates/Walkthroughts.html">Walkthroughts</a>
+                  <a href="#">Pokémon Legends: Arceus</a>
+                  <a href="#">Pokémon Brilliant and Shining Pearl</a>
+                  <a href="#">Espada y Escudo</a>
+                  <a href="#">Spin Offs</a>
+                  <a href="#">GO</a>
+              </div>
+              <div class="column">
+                  <h5>Mecánicas</h5>
+                  <a href="#">Tipos</a>
+                  <a href="#">Tabla de tipos</a>
+                  <a href="#">Habilidades</a>
+                  <a href="#">Naturaleza</a>
+                  <a href="#">Movimientos</a>
+                  <a href="#">Objetos</a>
+              </div>
+              <div class="column">
+                  <h5>Anime y manga</h5>
+                  <a href="#">Ash Ketchum</a>
+                  <a href="#">Anime</a>
+                  <a href="#">Personajes del anime</a>
+                  <a href="#">Episodios</a>
+                  <a href="#">Películas</a>
+                  <a href="#">Manga</a>
+              </div>
+              <div class="column">
+              <h5>TCG</h5>
+                  <a href="#">Acerca de...</a>
+                  <a href="#">Cómo jugar</a>
+                  <a href="#">Rotación</a>
+                  <a href="#">Cartas promocionales</a>
+                  <a href="#">Estrellas brillantes</a>
+                  <a href="#">Fusion strike</a>
+              </div>
+              <!-- Column container end -->
+          </div>
+          <!-- Dropdown-content container end -->
+      </div>
+      <!-- Dropdown container end -->
+     
+          <!-- Search bar start-->
+          <form action="" class="search-bar">
+              <input type="text" class="search">
+              <button><i class='bx bx-search'></i></button>
+          </form>
+  </div>
+   <!-- Links container end -->
+</header>
+
+  <div class="form-container">
+    <h1>Añadir Pokémon</h1>
+      <form id="add-pokemon-form" method="POST" enctype="multipart/form-data">
+          <div class="campo">
+            <label>Nombre: <input type="text" name="nombre" required /></label><br />
+          </div>
+          <div class="campo">
+            <label>Tipo (separados por coma): <input type="text" name="tipo" required /></label><br />
+          </div>
+          <div class="campo">
+            <label>Altura: <input type="text" name="altura" required /></label><br />
+          </div>
+          <div class="campo">
+            <label>Peso: <input type="text" name="peso" required /></label><br />
+          </div>
+          <div class="campo">
+            <label>Categoría: <input type="text" name="categoria" required /></label><br />
+          </div>
+          <div class="campo">
+            <label>Habilidad: <input type="text" name="habilidad" required /></label><br />
+          </div>
+          <div class="campo">
+            <label>Descripción: <textarea name="descripcion" required></textarea></label><br />
+          </div>
+          <div class="campo">
+            <label>Sexo (separados por coma): <input type="text" name="sexo" required /></label><br />
+          </div>
+          <div class="campo">
+            <label>Imagen: <input type="file" name="imagen" required /></label><br />
+          </div>
+          <div class="campo">
+            <button type="submit">Añadir Pokémon</button>
+          </div>  
+      </form>
+  </div>
+  <a href="/pokedex" class="back">Volver a la lista</a>
+
+  <script>
+    const form = document.getElementById('add-pokemon-form');
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault(); // Evita que el formulario recargue la página
+      const formData = new FormData(form); // Crear un objeto FormData con los datos del formulario
+
+      try {
+        const response = await fetch('/api/pokemons', {
+          method: 'POST',
+          body: formData, // Enviar los datos como FormData
+        });
+
+        if (response.ok) {
+          alert('Pokémon añadido con éxito');
+          window.location.href = '/'; // Redirigir a la lista de Pokémon
+        } else {
+          const errorData = await response.json();
+          alert(`Error al añadir el Pokémon: ${errorData.message}`);
+        }
+      } catch (error) {
+        console.error('Error al añadir Pokémon:', error);
+        alert('Error al añadir Pokémon');
+      }
+    });
+  </script>
+      <!-- Footer with our social media start-->
+      <footer>
+        <div class="social-media"><i class='bx bxl-instagram-alt'></i></div>
+        <div class="social-media"><i class='bx bxl-facebook-circle'></i></div>
+        <div class="social-media"><i class='bx bxl-youtube'></i></div>
+        <div class="social-media"><i class='bx bxl-pinterest' ></i></div>
+      </footer>
+    <!-- Footer with our social media end-->
+</body>
+</html>
+
