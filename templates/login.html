@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Login</title>
+    <link rel="icon" href="/static/img/earth.png" type="image/png">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="bg-image"></div>
+    <div class="overlay"></div>
+    <header>
+        <div class="logo-container">
+            <img src="/static/img/logo.png" alt="Logo de la página">
+        </div>
+
+        <div class="links">
+            <a href="/index">Inicio</a>
+            <!-- Validación de token antes de acceder a Pokedex -->
+            <a href="#" onclick="checkToken()">Pokédex</a>
+            <a href="/pokedex">Pokédex</a>
+        <!-- Dropdown container start -->
+        <div class="dropdown">
+            <a href="#" class="dropbtn" id="info-btn">Información</a>
+            <div class="dropdown-content">
+                <div class="column">
+                    <h5>Juegos</h5>
+                    <a href="Walkthroughts.html">Walkthroughts</a>
+                    <a href="#">Pokémon Legends: Arceus</a>
+                    <a href="#">Pokémon Brilliant and Shining Pearl</a>
+                    <a href="#">Espada y Escudo</a>
+                    <a href="#">Spin Offs</a>
+                    <a href="#">GO</a>
+                </div>
+                <div class="column">
+                    <h5>Mecánicas</h5>
+                    <a href="#">Tipos</a>
+                    <a href="#">Tabla de tipos</a>
+                    <a href="#">Habilidades</a>
+                    <a href="#">Naturaleza</a>
+                    <a href="#">Movimientos</a>
+                    <a href="#">Objetos</a>
+                </div>
+                <div class="column">
+                    <h5>Anime y manga</h5>
+                    <a href="#">Ash Ketchum</a>
+                    <a href="#">Anime</a>
+                    <a href="#">Personajes del anime</a>
+                    <a href="#">Episodios</a>
+                    <a href="#">Películas</a>
+                    <a href="#">Manga</a>
+                </div>
+                <div class="column">
+                <h5>TCG</h5>
+                    <a href="#">Acerca de...</a>
+                    <a href="#">Cómo jugar</a>
+                    <a href="#">Rotación</a>
+                    <a href="#">Cartas promocionales</a>
+                    <a href="#">Estrellas brillantes</a>
+                    <a href="#">Fusion strike</a>
+                </div>
+                <!-- Column container end -->
+            </div>
+            <!-- Dropdown-content container end -->
+        </div>
+        <!-- Dropdown container end -->
+        <form action="" class="search-bar">
+            <input type="text" class="search">
+            <button><i class='bx bx-search'></i></button>
+        </form>
+        </div>
+        
+    </header>
+
+    <div class="title">
+        <h1>Iniciar Sesión</h1>
+    </div>
+
+    <main>
+        <section class="login-form">
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <label for="username">Usuario:</label>
+                <input type="text" id="username" placeholder="Tu usuario" required>
+
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" placeholder="Tu contraseña" required>
+
+                <button type="submit">Iniciar Sesión</button>
+                <p id="error-message" style="color: red;"></p>
+            </form>
+            <div class="register-option">
+                <p>¿No tienes cuenta? <a href="/register">Regístrate</a></p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="social-media"><i class='bx bxl-instagram-alt'></i></div>
+        <div class="social-media"><i class='bx bxl-facebook-circle'></i></div>
+        <div class="social-media"><i class='bx bxl-youtube'></i></div>
+        <div class="social-media"><i class='bx bxl-pinterest'></i></div>
+    </footer>
+
+    <script>
+        // Función para manejar el login
+        async function handleLogin(event) {
+            event.preventDefault(); // Evitar que se recargue la página
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorMessage = document.getElementById('error-message');
+
+            errorMessage.textContent = ''; // Limpiar mensajes anteriores
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Guardar token en localStorage
+                    localStorage.setItem('token', data.token);
+
+                    // Redirigir a la página principal (Pokedex)
+                    window.location.href = '/pokedex';
+                } else {
+                    errorMessage.textContent = data.message || 'Usuario o contraseña incorrectos.';
+                }
+            } catch (error) {
+                console.error('Error en la autenticación:', error);
+                errorMessage.textContent = 'Error al conectar con el servidor. Inténtalo más tarde.';
+            }
+        }
+
+        // Función para verificar el token antes de ir a Pokedex
+        function checkToken() {
+            const token = localStorage.getItem('token');
+
+            if (token) {
+                // Si hay token, redirigir a /pokedex
+                window.location.href = '/pokedex';
+            } else {
+                // Si no hay token, redirigir al login
+                alert('Por favor, inicie sesión primero.');
+                window.location.href = '/';
+            }
+        }
+
+        // Comprobar token al cargar la página
+        window.onload = () => {
+            const token = localStorage.getItem('token');
+
+            // Si la página es /pokedex y no hay token, redirigir al login
+            if (window.location.pathname === '/pokedex' && !token) {
+                alert('Debe iniciar sesión para acceder a la Pokédex.');
+                window.location.href = '/';
+            }
+        };
+                fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.token) {
+            localStorage.setItem('token', data.token); // Guardar el token
+            window.location.href = '/pokedex'; // Redirigir a la Pokédex
+            } else {
+            alert('Error de autenticación');
+            }
+         });
+
+    </script>
+</body>
+</html>
+
+
