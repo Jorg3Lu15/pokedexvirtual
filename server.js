@@ -1,4 +1,5 @@
 // --------------------------- IMPORTACIONES ---------------------------
+const { MongoClient, ServerApiVersion } = require('mongodb');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -24,13 +25,31 @@ app.use('/templates', express.static(path.join(__dirname, 'templates')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // --------------------------- CONEXIÓN A LA BASE DE DATOS ---------------------------
-mongoose
-  .connect(MONGODB_URI)
-  .then(() => console.log('Conexión exitosa a MongoDB'))
-  .catch((err) => {
-    console.error('Error al conectar con MongoDB:', err);
-    process.exit(1);
-  });
+const uri = "mongodb+srv://jluishuerta07130:<db_password>@pokemon.da1an.mongodb.net/?retryWrites=true&w=majority&appName=Pokemon";
+
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
+
+async function run() {
+  try {
+    // Connect the client to the server	(optional starting in v4.7)
+    await client.connect();
+    // Send a ping to confirm a successful connection
+    await client.db("admin").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  } finally {
+    // Ensures that the client will close when you finish/error
+    await client.close();
+  }
+}
+run().catch(console.dir);
+
 
 // --------------------------- MODELOS ---------------------------
 const adminSchema = new mongoose.Schema({
