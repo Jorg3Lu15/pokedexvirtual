@@ -1,19 +1,70 @@
+// --------------------------- IMPORTACIONES ---------------------------
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const multer = require('multer');
-const { Schema } = mongoose;
-const autoIncrement = require('mongoose-sequence')(mongoose); // Paquete para autoincrementar IDs
+require('dotenv').config(); // Variables de entorno
 
+// --------------------------- CONFIGURACIÓN INICIAL ---------------------------
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000;
+const SECRET_KEY = process.env.SECRET_KEY || 'pokeKey999';
+const MONGODB_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/MundoPokemon';
 
-// Configuración de multer para almacenar las imágenes
+// --------------------------- MIDDLEWARES ---------------------------
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/static', express.static(path.join(__dirname, 'static')));
+app.use('/templates', express.static(path.join(__dirname, 'templates')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// --------------------------- CONEXIÓN A LA BASE DE DATOS ---------------------------
+mongoose
+  .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Conexión exitosa a MongoDB'))
+  .catch((err) => {
+    console.error('Error al conectar con MongoDB:', err);
+    process.exit(1);
+  });
+
+// --------------------------- MODELOS ---------------------------
+const adminSchema = new mongoose.Schema({
+  username: { type: String, unique: true, required: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ['admin', 'user'], default: 'user' },
+});
+const Admin = mongoose.model('admins', adminSchema);
+
+const pokemonSchema = new mongoose.Schema({
+  id: { type: Number, required: true, unique: true },
+  nombre: { type: String, required: true },
+  tipo: { type: [String], required: true },
+  altura: { type: Number, required: true },
+  peso: { type: Number, required: true },
+  habilidad: { type: String, required: true },
+  descripcion: { type: String, required: true },
+  sexo: { type: [String], required: true },
+  imagen: { type: String, required: true }, // Ruta de la imagen del Pokémon
+});
+
+// Generar un `id` autoincremental antes de guardar un nuevo Pokémon
+pokemonSchema.pre('save', async function (next) {
+  const lastPokemon = await Pokemon.findOne().sort({ id: -1 }); // Obtener el Pokémon con el ID más alto
+  this.id = lastPokemon ? lastPokemon.id + 1 : 1; // Incrementar el ID o iniciar en 1
+  next();
+});
+
+const Pokemon = mongoose.model('pokemons', pokemonSchema);
+
+// --------------------------- CONFIGURACIÓN DE MULTER ---------------------------
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Carpeta donde se guardarán las imágenes
+    cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname)); // Nombre único para la imagen
@@ -22,114 +73,151 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-app.use(cors());
-app.use(bodyParser.json());
-
-// Configuración para servir archivos estáticos desde la carpeta "static"
-app.use('/static', express.static(path.join(__dirname, 'static')));
-
-// Configuración para servir archivos de vistas desde la carpeta "templates"
-app.use('/templates', express.static(path.join(__dirname, 'templates')));
-
-// Configuración para servir archivos estáticos desde la carpeta "uploads"
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-
-// Esquema del Pokémon en MongoDB
-const pokemonSchema = new Schema({
-  id: { type: Number, unique: true }, // Campo autoincrementable
-  nombre: String,
-  tipo: [String],
-  altura: String,
-  peso: String,
-  categoria: String,
-  habilidad: String,
-  descripcion: String,
-  sexo: [String],
-  imagen: String, // Guardamos la URL de la imagen
-});
-
-// Plugin para autoincrementar el campo "id"
-pokemonSchema.plugin(autoIncrement, { inc_field: 'id' });
-
-const Pokemon = mongoose.model('Pokemon', pokemonSchema);
-
-// Ruta para agregar un nuevo Pokémon con imagen
-app.post('/api/pokemons', upload.single('imagen'), async (req, res) => {
-  const { nombre, tipo, altura, peso, categoria, habilidad, descripcion, sexo } = req.body;
-  const imagenUrl = req.file ? `/uploads/${req.file.filename}` : null; // Guardar la ruta de la imagen
-
-  const nuevoPokemon = new Pokemon({
-    nombre,
-    tipo: Array.isArray(tipo) ? tipo : tipo.split(','), // Convertir a array si es necesario
-    altura,
-    peso,
-    categoria,
-    habilidad,
-    descripcion,
-    sexo: Array.isArray(sexo) ? sexo : sexo.split(','), // Convertir a array si es necesario
-    imagen: imagenUrl, // Guardamos la URL de la imagen
-  });
+// --------------------------- AUTORIZACIÓN ---------------------------
+function authenticateToken(req, res, next) {
+  const token = req.headers['authorization'] && req.headers['authorization'].split(' ')[1];
+  if (!token) return res.status(401).json({ message: 'Token requerido' });
 
   try {
-    const result = await nuevoPokemon.save();
-    console.log('Pokémon añadido:', result);
-    res.status(201).json({ message: 'Pokémon añadido exitosamente', pokemon: result });
+    const decoded = jwt.verify(token, SECRET_KEY);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    res.status(403).json({ message: 'Token inválido o expirado' });
+  }
+}
+
+// --------------------------- RUTAS ---------------------------
+
+// Registro de usuarios
+app.post('/register', async (req, res) => {
+  const { username, password, role } = req.body;
+
+  // Validar que los datos sean correctos
+  if (typeof username !== 'string' || !username.trim()) {
+    return res.status(400).json({ message: 'El nombre de usuario es obligatorio y debe ser una cadena de texto válida.' });
+  }
+  if (typeof password !== 'string' || !password.trim()) {
+    return res.status(400).json({ message: 'La contraseña es obligatoria y debe ser una cadena de texto válida.' });
+  }
+
+  try {
+    const existingUser = await Admin.findOne({ username });
+    if (existingUser) return res.status(400).json({ message: 'El usuario ya existe.' });
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new Admin({ username, password: hashedPassword, role });
+    await newUser.save();
+
+    res.status(201).json({ message: 'Registro exitoso, puedes iniciar sesión ahora.' });
   } catch (err) {
-    console.error('Error al añadir el Pokémon:', err);
-    res.status(500).json({ message: 'Error al añadir el Pokémon' });
+    console.error('Error al registrar el usuario:', err);
+    res.status(500).json({ message: 'Error en el servidor.' });
   }
 });
 
-// Ruta para obtener todos los Pokémon
-app.get('/api/pokemons', async (req, res) => {
+// Inicio de sesión
+app.post('/api/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  if (typeof username !== 'string' || !username.trim()) {
+    return res.status(400).json({ message: 'El nombre de usuario debe ser una cadena de texto válida.' });
+  }
+
+  if (typeof password !== 'string' || !password.trim()) {
+    return res.status(400).json({ message: 'La contraseña debe ser una cadena de texto válida.' });
+  }
+
+  try {
+    const user = await Admin.findOne({ username });
+    if (!user) return res.status(401).json({ message: 'Usuario o contraseña incorrectos' });
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) return res.status(401).json({ message: 'Usuario o contraseña incorrectos' });
+
+    // Generar token JWT
+    const token = jwt.sign({ username: user.username, role: user.role }, SECRET_KEY, { expiresIn: '1h' });
+    res.json({ token });
+  } catch (err) {
+    console.error('Error al iniciar sesión:', err);
+    res.status(500).json({ message: 'Error en el servidor.' });
+  }
+});
+
+// Crear Pokémon con subida de imagen
+app.post('/api/pokemons', authenticateToken, upload.single('imagen'), async (req, res) => {
+  const { nombre, tipo, altura, peso, habilidad, descripcion, sexo } = req.body;
+  const imagen = req.file ? `/uploads/${req.file.filename}` : ''; // Ruta de la imagen
+
+  // Validar que los campos necesarios estén presentes
+  if (!nombre || !tipo || !altura || !peso || !habilidad || !descripcion || !sexo || !imagen) {
+    return res.status(400).json({ message: 'Faltan campos obligatorios' });
+  }
+
+  try {
+    const newPokemon = new Pokemon({
+      nombre,
+      tipo: tipo.split(','),
+      altura,
+      peso,
+      habilidad,
+      descripcion,
+      sexo: sexo.split(','),
+      imagen, // Ruta de la imagen
+    });
+
+    await newPokemon.save();
+    
+    // Incluimos el 'id' generado en la respuesta
+    res.status(201).json({
+      message: 'Pokémon creado con éxito',
+      pokemon: {
+        id: newPokemon.id,  // Aquí mostramos el id generado en la base de datos
+        nombre: newPokemon.nombre,
+        tipo: newPokemon.tipo,
+        altura: newPokemon.altura,
+        peso: newPokemon.peso,
+        habilidad: newPokemon.habilidad,
+        descripcion: newPokemon.descripcion,
+        sexo: newPokemon.sexo,
+        imagen: newPokemon.imagen,
+      }
+    });
+  } catch (err) {
+    console.error('Error al crear Pokémon:', err);
+    res.status(500).json({ message: 'Error en el servidor.' });
+  }
+});
+
+
+// Endpoint protegido para la Pokédex
+app.get('/api/pokedex', authenticateToken, async (req, res) => {
+  try {
+    const pokemons = await Pokemon.find(); // Obtener todos los Pokémon de la base de datos
+    res.json({ message: `Bienvenido ${req.user.username}, aquí está tu Pokédex.`, pokemons });
+  } catch (error) {
+    console.error('Error al obtener Pokémon:', error);
+    res.status(500).json({ message: 'Error al obtener Pokémon' });
+  }
+});
+
+// Ruta para obtener Pokémon específicos
+app.get('/api/pokemons', authenticateToken, async (req, res) => {
   try {
     const pokemons = await Pokemon.find();
     res.json(pokemons);
-  } catch (err) {
-    console.error('Error al obtener los Pokémon:', err);
+  } catch (error) {
     res.status(500).json({ message: 'Error al obtener los Pokémon' });
   }
 });
 
-// Ruta para eliminar pokémon registrado
-app.delete('/api/pokemons/:id', async (req, res) => {
-  const { id } = req.params;
+// --------------------------- RUTAS HTML ---------------------------
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'templates', 'index.html')));
+app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'templates', 'login.html')));
+app.get('/pokedex', (req, res) => res.sendFile(path.join(__dirname, 'templates', 'pokedex.html')));
+app.get('/add',(req, res) => res.sendFile(path.join(__dirname, 'templates', 'add.html')));
 
-  try {
-    const result = await Pokemon.findOneAndDelete({ id }); // Buscar y eliminar el Pokémon por ID
-    if (result) {
-      res.json({ message: 'Pokémon eliminado con éxito' });
-    } else {
-      res.status(404).json({ message: 'Pokémon no encontrado' });
-    }
-  } catch (err) {
-    console.error('Error al eliminar el Pokémon:', err);
-    res.status(500).json({ message: 'Error al eliminar el Pokémon' });
-  }
-});
-
-// Ruta para la página principal (index.html)
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'templates', 'index.html'));
-});
-
-// Ruta para la página de la Pokédex (pokedex.html)
-app.get('/pokedex', (req, res) => {
-  res.sendFile(path.join(__dirname, 'templates', 'pokedex.html'));
-});
-
-// Ruta para la página de añadir Pokémon (add.html)
-app.get('/add', (req, res) => {
-  res.sendFile(path.join(__dirname, 'templates', 'add.html'));
-});
-
-// Conexión a MongoDB
-mongoose.connect('mongodb://localhost:27017/MundoPokemon', { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('Conectado a MongoDB'))
-  .catch((err) => console.error('Error al conectar con MongoDB:', err));
-
-// Iniciar el servidor
-app.listen(port, () => {
-  console.log(`Servidor corriendo en http://localhost:${port}`);
+// --------------------------- INICIO DEL SERVIDOR ---------------------------
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

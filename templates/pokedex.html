@@ -1,156 +1,217 @@
 <!DOCTYPE html>
-  <html lang="es">
+<html lang="es">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Pokémon</title>
+    <title>Pokédex</title>
     <link rel="icon" href="/static/img/earth.png" type="image/png">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/styles.css">
   </head>
-      <div class="bg-image"></div>
-      <div class="overlay"></div>
-    <body>
+  <body>
+    <div class="bg-image"></div>
+    <div class="overlay"></div>
 
-      <!-- Header start -->
-      <header>
-        <!-- Logo-container start -->
-        <div class="logo-container">
-            <img src="/static/img/logo.png" alt="Logo de la pagina">
-        </div>
-        <!-- Logo-container end -->
-
-        <!-- Links container start -->
-        <div class="links">
-            <a href="/">Inicio</a>
-            <a href="/pokedex">Pokédex</a>
-            <!-- Dropdown container start -->
-            <div class="dropdown">
-                <a href="#" class="dropbtn" id="info-btn">Información</a>
-                <div class="dropdown-content">
-                    <div class="column">
-                        <h5>Juegos</h5>
-                        <a href="/Walkthroughts.html">Walkthroughts</a>
-                        <a href="#">Pokémon Legends: Arceus</a>
-                        <a href="#">Pokémon Brilliant and Shining Pearl</a>
-                        <a href="#">Espada y Escudo</a>
-                        <a href="#">Spin Offs</a>
-                        <a href="#">GO</a>
-                    </div>
-                    <div class="column">
-                        <h5>Mecánicas</h5>
-                        <a href="#">Tipos</a>
-                        <a href="#">Tabla de tipos</a>
-                        <a href="#">Habilidades</a>
-                        <a href="#">Naturaleza</a>
-                        <a href="#">Movimientos</a>
-                        <a href="#">Objetos</a>
-                    </div>
-                    <div class="column">
-                        <h5>Anime y manga</h5>
-                        <a href="#">Ash Ketchum</a>
-                        <a href="#">Anime</a>
-                        <a href="#">Personajes del anime</a>
-                        <a href="#">Episodios</a>
-                        <a href="#">Películas</a>
-                        <a href="#">Manga</a>
-                    </div>
-                    <div class="column">
-                    <h5>TCG</h5>
-                        <a href="#">Acerca de...</a>
-                        <a href="#">Cómo jugar</a>
-                        <a href="#">Rotación</a>
-                        <a href="#">Cartas promocionales</a>
-                        <a href="#">Estrellas brillantes</a>
-                        <a href="#">Fusion strike</a>
-                    </div>
-                    <!-- Column container end -->
-                </div>
-                <!-- Dropdown-content container end -->
+    <!-- Header start -->
+    <header>
+      <div class="logo-container">
+        <img src="/static/img/logo.png" alt="Logo de la pagina">
+      </div>
+      <div class="links">
+        <a href="/">Inicio</a>
+        <a href="/pokedex">Pokédex</a>
+        <div class="dropdown">
+            <a href="#" class="dropbtn" id="info-btn">Información</a>
+            <div class="dropdown-content">
+                <!-- Contenido del dropdown -->
+                <div class="column">
+                  <h5>Juegos</h5>
+                  <a href="Walkthroughts.html">Walkthroughts</a>
+                  <a href="#">Pokémon Legends: Arceus</a>
+                  <a href="#">Pokémon Brilliant and Shining Pearl</a>
+                  <a href="#">Espada y Escudo</a>
+                  <a href="#">Spin Offs</a>
+                  <a href="#">GO</a>
+              </div>
+              <div class="column">
+                  <h5>Mecánicas</h5>
+                  <a href="#">Tipos</a>
+                  <a href="#">Tabla de tipos</a>
+                  <a href="#">Habilidades</a>
+                  <a href="#">Naturaleza</a>
+                  <a href="#">Movimientos</a>
+                  <a href="#">Objetos</a>
+              </div>
+              <div class="column">
+                  <h5>Anime y manga</h5>
+                  <a href="#">Ash Ketchum</a>
+                  <a href="#">Anime</a>
+                  <a href="#">Personajes del anime</a>
+                  <a href="#">Episodios</a>
+                  <a href="#">Películas</a>
+                  <a href="#">Manga</a>
+              </div>
+              <div class="column">
+              <h5>TCG</h5>
+                  <a href="#">Acerca de...</a>
+                  <a href="#">Cómo jugar</a>
+                  <a href="#">Rotación</a>
+                  <a href="#">Cartas promocionales</a>
+                  <a href="#">Estrellas brillantes</a>
+                  <a href="#">Fusion strike</a>
+              </div>
             </div>
-            <!-- Dropdown container end -->
-          
-                <!-- Search bar start-->
-                <form action="" class="search-bar">
-                    <input type="text" class="search">
-                    <button><i class='bx bx-search'></i></button>
-                </form>
         </div>
-        <!-- Links container end -->
+        <button id="logout-btn" class="logout-btn" onclick="cerrarSesion()">Cerrar Sesión</button>
+        <form action="" class="search-bar">
+            <input type="text" class="search">
+            <button><i class='bx bx-search'></i></button>
+        </form>
+      </div>
     </header>
-        <div class="title">
-          <h1>Pokédex</h1>
-        </div>
-      <div id="pokemon-list"></div>
-      <a href="/add" class="back">Añadir nuevo Pokémon</a>
 
+    <div class="title">
+      <h1>Pokédex</h1>
+    </div>
 
-      <script>
-        // Función para cargar la lista de Pokémon
-        async function cargarPokemons() {
-          const container = document.getElementById('pokemon-list');
-          container.innerHTML = ''; // Limpiar contenido previo
+    <!-- Contenedor de la lista de Pokémon -->
+    <div id="pokemon-list"></div>
+    <a href="/add" class="back">Añadir nuevo Pokémon</a>
 
-          try {
-            const response = await fetch('/api/pokemons');
-            const data = await response.json();
+    <script>
+      // Función para cargar la lista de Pokémon
+      async function cargarPokemons() {
+        const container = document.getElementById('pokemon-list');
+        container.innerHTML = ''; // Limpiar contenido previo
 
-            data.forEach((pokemon) => {
-              const pokemonCard = document.createElement('div');
-              pokemonCard.className = 'pokemon-card';
-              pokemonCard.innerHTML = `
-                <h2><strong>No.</strong> ${pokemon.id}</h2>
-                <h2>${pokemon.nombre}</h2>
-                <img src="${pokemon.imagen}" alt="${pokemon.nombre}" />
-                <p><strong>Tipo:</strong> ${pokemon.tipo.join(', ')}</p>
-                <p><strong>Altura:</strong> ${pokemon.altura} m</p>
-                <p><strong>Peso:</strong> ${pokemon.peso} kg</p>
-                <p><strong>Habilidad:</strong> ${pokemon.habilidad}</p>
-                <p><strong>Descripción:</strong> ${pokemon.descripcion}</p>
-                <p><strong>Sexo:</strong> ${pokemon.sexo.join(', ')}</p>
-                <button class="delete-button" onclick="eliminarPokemon('${pokemon.id}')">Eliminar</button>
-              `;
-              container.appendChild(pokemonCard);
-            });
-          } catch (error) {
-            console.error('Error al cargar Pokémon:', error);
+        try {
+          const token = localStorage.getItem('token'); // Obtener el token
+
+          // Redirigir al login si no hay token
+          if (!token) {
+            alert('Acceso denegado. Inicia sesión primero.');
+            window.location.href = '/login';
+            return;
           }
-        }
 
-        // Función para eliminar un Pokémon
-        async function eliminarPokemon(id) {
-          const confirmacion = confirm('¿Estás seguro de que deseas eliminar este Pokémon?');
-          if (!confirmacion) return;
+          // Solicitud a la API con el token
+          const response = await fetch('/api/pokemons', {
+            headers: { Authorization: `Bearer ${token}` },
+          });
 
-          try {
-            const response = await fetch(`/api/pokemons/${id}`, {
-              method: 'DELETE',
-            });
-
-            if (response.ok) {
-              alert('Pokémon eliminado con éxito');
-              cargarPokemons(); // Recargar la lista después de eliminar
+          if (!response.ok) {
+            if (response.status === 401 || response.status === 403) {
+              alert('Sesión expirada o no válida. Por favor, inicia sesión nuevamente.');
+              localStorage.removeItem('token'); // Eliminar token inválido
+              window.location.href = '/login';
             } else {
-              const errorData = await response.json();
-              alert(`Error al eliminar el Pokémon: ${errorData.message}`);
+              throw new Error('No se pudo cargar la lista de Pokémon.');
             }
-          } catch (error) {
-            console.error('Error al eliminar Pokémon:', error);
-            alert('Error al eliminar Pokémon');
+          }
+
+          const pokemons = await response.json();
+
+          // Verifica si hay Pokémon
+          if (pokemons.length === 0) {
+            container.innerHTML = '<p>No se encontraron Pokémon registrados.</p>';
+            return;
+          }
+
+          // Renderizar la lista de Pokémon
+          pokemons.forEach((pokemon) => {
+            const pokemonCard = document.createElement('div');
+            pokemonCard.className = 'pokemon-card';
+            pokemonCard.innerHTML = `
+              <h2><strong>No:</strong> ${pokemon.id}</h2>  <!-- ID del Pokémon -->
+              <h2>${pokemon.nombre}</h2>
+              <img src="${pokemon.imagen}" alt="${pokemon.nombre}" />
+              <p><strong>Tipo:</strong> ${pokemon.tipo.join(', ')}</p>
+              <p><strong>Altura:</strong> ${pokemon.altura} m</p>
+              <p><strong>Peso:</strong> ${pokemon.peso} kg</p>
+              <p><strong>Habilidad:</strong> ${pokemon.habilidad}</p>
+              <p><strong>Descripción:</strong> ${pokemon.descripcion}</p>
+              <p><strong>Sexo:</strong> ${pokemon.sexo.join(', ')}</p>
+              <button class="delete-button" onclick="eliminarPokemon('${pokemon._id}')">Eliminar</button>
+              <button class="edit-button" onclick="modificarPokemon('${pokemon._id}')">Editar</button>
+            `;
+            container.appendChild(pokemonCard);
+          });
+        } catch (error) {
+          console.error('Error al cargar Pokémon:', error);
+          alert('Error al cargar los Pokémon. Inicia sesión nuevamente.');
+          window.location.href = '/login';
+        }
+      }
+
+      // Función para eliminar un Pokémon
+      async function eliminarPokemon(id) {
+        const confirmacion = confirm('¿Estás seguro de que deseas eliminar este Pokémon?');
+        if (!confirmacion) return;
+
+        try {
+          const token = localStorage.getItem('token');
+          const response = await fetch(`/api/pokemons/${id}`, {
+            method: 'DELETE',
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          if (response.ok) {
+            alert('Pokémon eliminado con éxito');
+            cargarPokemons(); // Recargar la lista después de eliminar
+          } else {
+            const errorData = await response.json();
+            alert(`Error: ${errorData.message}`);
+          }
+        } catch (error) {
+          console.error('Error al eliminar Pokémon:', error);
+          alert('Error al eliminar el Pokémon. Inténtalo más tarde.');
+        }
+      }
+
+      // Función para modificar un Pokémon (redirigir a formulario de edición)
+      function modificarPokemon(id) {
+        window.location.href = `/edit?id=${id}`;
+      }
+
+      // Verificar el token al cargar la página
+      window.onload = () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          alert('Debe iniciar sesión para acceder a la Pokédex.');
+          window.location.href = '/login';
+        } else {
+          cargarPokemons();
+        }
+      };
+      // Función para cerrar sesión
+        function cerrarSesion() {
+          const token = localStorage.getItem('token');
+          if (token) {
+            localStorage.removeItem('token');  // Eliminar el token del almacenamiento local
+            alert('Has cerrado sesión con éxito');
+            window.location.href = '/';  // Redirigir a la página de inicio de sesión
           }
         }
 
-        // Cargar la lista de Pokémon al cargar la página
-        window.onload = cargarPokemons;
-      </script>
+        // Verificar el token al cargar la página
+        window.onload = () => {
+          const token = localStorage.getItem('token');
+          if (!token) {
+            alert('Debe iniciar sesión para acceder a la Pokédex.');
+            window.location.href = '/login';
+          } else {
+            cargarPokemons();
+            document.body.classList.add('logged-in');  // Mostrar el botón de cierre de sesión
+          }
+        };
+    </script>
 
-      <!-- Footer with our social media start-->
-      <footer>
-          <div class="social-media"><i class='bx bxl-instagram-alt'></i></div>
-          <div class="social-media"><i class='bx bxl-facebook-circle'></i></div>
-          <div class="social-media"><i class='bx bxl-youtube'></i></div>
-          <div class="social-media"><i class='bx bxl-pinterest' ></i></div>
-      </footer>
-    </body>
-    </html>
-
+    <!-- Footer -->
+    <footer>
+      <div class="social-media"><i class="bx bxl-instagram-alt"></i></div>
+      <div class="social-media"><i class="bx bxl-facebook-circle"></i></div>
+      <div class="social-media"><i class="bx bxl-youtube"></i></div>
+      <div class="social-media"><i class="bx bxl-pinterest"></i></div>
+    </footer>
+  </body>
+</html>

@@ -24,7 +24,13 @@ body {
     position: relative;
     overflow: hidden;
 }
-
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin: 2.5rem;
+}
 /* Imagen de fondo*/
 .bg-image {
     position: absolute;
@@ -155,7 +161,7 @@ header .links {
     
 }
 
-.links a {
+.links a  {
     position: relative;
     color: var(--white);
     font-weight: 700;
@@ -163,6 +169,7 @@ header .links {
     margin-right: .3rem;
     text-decoration: none;
 }
+
 .links a::after {
     content: "";
     position: absolute;
@@ -462,4 +469,43 @@ a.back {
   /* Efecto hover para el enlace */
   a.back:hover {
     background-color: #0056b3; /* Color más oscuro al pasar el ratón */
+  }
+
+  .login-form {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .register-form {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .logout-btn {
+    background-color: #f44336;  /* Rojo para indicar "salir" */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    display: none;  /* Por defecto, oculto */
+    margin-left: 10px;
+    transition: background-color 0.3s;
+  }
+  
+  .logout-btn:hover {
+    background-color: #e53935;
+  }
+  /* Mostrar el botón cuando el usuario haya iniciado sesión */
+.logged-in .logout-btn {
+    display: inline-block;  /* Mostrar el botón de cierre de sesión */
   }
