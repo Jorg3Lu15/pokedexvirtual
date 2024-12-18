@@ -1,0 +1,20 @@
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# Archivos de configuración
+process.env
+
+# Subidas
+uploads/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Dependencias bloqueadas
+package-lock.json
+ 
