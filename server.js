@@ -11,7 +11,7 @@ require('dotenv').config(); // Variables de entorno
 
 // --------------------------- CONFIGURACIÓN INICIAL ---------------------------
 const app = express();
-const PORT = process.env.PORT || 3000; // Puerto por defecto si no está definido en el entorno
+const PORT = process.env.PORT; // Puerto por defecto si no está definido en el entorno
 const SECRET_KEY = process.env.SECRET_KEY;
 
 // --------------------------- MIDDLEWARES ---------------------------
