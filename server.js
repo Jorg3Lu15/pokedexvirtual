@@ -23,7 +23,7 @@ app.use('/templates', express.static(path.join(__dirname, 'templates')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // --------------------------- CONEXIÓN A LA BASE DE DATOS ---------------------------
-const mongoURI = process.env.MONGODB_URI;
+const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://jluishuerta07130:<db_password>@pokemon.da1an.mongodb.net/?retryWrites=true&w=majority&appName=Pokemon;';
 
 mongoose
   .connect(mongoURI)
