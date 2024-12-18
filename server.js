@@ -25,7 +25,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // --------------------------- CONEXIÓN A LA BASE DE DATOS ---------------------------
 mongoose
-  .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(MONGODB_URI)
   .then(() => console.log('Conexión exitosa a MongoDB'))
   .catch((err) => {
     console.error('Error al conectar con MongoDB:', err);
