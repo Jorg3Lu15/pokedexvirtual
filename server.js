@@ -214,6 +214,7 @@ app.get('/api/pokemons', authenticateToken, async (req, res) => {
 // --------------------------- RUTAS HTML ---------------------------
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'templates', 'index.html')));
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'templates', 'login.html')));
+app.get('/register', (req, res) => res.sendFile(path.join(__dirname, 'templates', 'register.html')));
 app.get('/pokedex', (req, res) => res.sendFile(path.join(__dirname, 'templates', 'pokedex.html')));
 app.get('/add',(req, res) => res.sendFile(path.join(__dirname, 'templates', 'add.html')));
 
